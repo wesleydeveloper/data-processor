@@ -1,0 +1,77 @@
+{
+    "name": "wesleydeveloper/data-processor",
+    "description": "High-performance data import/export package for Laravel with cloud storage support, chunking, and queue processing",
+    "type": "library",
+    "keywords": [
+        "laravel",
+        "excel",
+        "csv",
+        "import",
+        "export",
+        "performance",
+        "openspout",
+        "queue",
+        "cloud-storage",
+        "data-processing"
+    ],
+    "homepage": "https://github.com/wesleydeveloper/data-processor",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Wesley Silva",
+            "email": "wesleydeveloper@outlook.com",
+            "homepage": "https://github.com/wesleydeveloper"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/filesystem": "^11.0|^12.0",
+        "illuminate/queue": "^11.0|^12.0",
+        "illuminate/database": "^11.0|^12.0",
+        "illuminate/validation": "^11.0|^12.0",
+        "openspout/openspout": "^4.30"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0|^12.0",
+        "orchestra/testbench": "^9.0|^10.0",
+        "mockery/mockery": "^1.6",
+        "fakerphp/faker": "^1.24",
+        "phpstan/phpstan": "^2.1",
+        "laravel/pint": "^1.24"
+    },
+    "autoload": {
+        "psr-4": {
+            "Wesleydeveloper\\DataProcessor\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Wesleydeveloper\\DataProcessor\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "analyse": "vendor/bin/phpstan analyse",
+        "format": "vendor/bin/pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Wesleydeveloper\\DataProcessor\\DataProcessorServiceProvider"
+            ],
+            "aliases": {
+                "DataProcessor": "Wesleydeveloper\\DataProcessor\\Facades\\DataProcessor"
+            }
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

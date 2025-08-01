@@ -1,0 +1,80 @@
+#!/usr/bin/env php
+<?php
+
+echo "🚀 Executando testes do Data Processor...\n\n";
+
+// Detectar se estamos em um monorepo ou pacote standalone
+$packageDir = __DIR__ . '/..';
+$rootDir = realpath($packageDir . '/../..');
+
+// Verificar onde está o vendor
+if (file_exists($rootDir . '/vendor/bin/phpunit')) {
+    $phpunit = $rootDir . '/vendor/bin/phpunit';
+    $testsDir = $packageDir . '/tests';
+    $configFile = $packageDir . '/phpunit.xml';
+} elseif (file_exists($packageDir . '/vendor/bin/phpunit')) {
+    $phpunit = $packageDir . '/vendor/bin/phpunit';
+    $testsDir = $packageDir . '/tests';
+    $configFile = $packageDir . '/phpunit.xml';
+} else {
+    echo "❌ PHPUnit não encontrado. Execute 'composer install' primeiro.\n";
+    exit(1);
+}
+
+echo "📍 Usando PHPUnit: $phpunit\n";
+echo "📍 Testando diretório: $testsDir\n";
+echo "📍 Config file: $configFile\n\n";
+
+// Verificar se os testes existem
+if (!is_dir($testsDir)) {
+    echo "❌ Diretório de testes não encontrado: $testsDir\n";
+    exit(1);
+}
+
+// Testes unitários
+if (is_dir($testsDir . '/Unit')) {
+    echo "=== TESTES UNITÁRIOS ===\n";
+    $cmd = "$phpunit $testsDir/Unit --configuration $configFile --colors=always";
+    echo "Executando: $cmd\n";
+    $return = 0;
+    system($cmd, $return);
+
+    if ($return !== 0) {
+        echo "❌ Testes unitários falharam!\n";
+    } else {
+        echo "✅ Testes unitários passaram!\n";
+    }
+    echo "\n";
+}
+
+// Testes de feature (excluindo benchmark)
+if (is_dir($testsDir . '/Feature')) {
+    echo "=== TESTES DE INTEGRAÇÃO ===\n";
+    $cmd = "$phpunit $testsDir/Feature --configuration $configFile --colors=always --exclude-group=benchmark";
+    echo "Executando: $cmd\n";
+    $return = 0;
+    system($cmd, $return);
+
+    if ($return !== 0) {
+        echo "❌ Testes de integração falharam!\n";
+    } else {
+        echo "✅ Testes de integração passaram!\n";
+    }
+    echo "\n";
+}
+
+// Benchmark (opcional)
+echo "=== BENCHMARK (opcional) ===\n";
+echo "Execute: $phpunit $testsDir/Feature/BenchmarkTest.php --configuration $configFile --group=benchmark\n\n";
+
+// Testes em paralelo (se paratest estiver disponível)
+$paratest = dirname($phpunit) . '/paratest';
+if (file_exists($paratest)) {
+    echo "=== TESTES EM PARALELO (disponível) ===\n";
+    echo "Execute: $paratest $testsDir/Unit $testsDir/Feature --configuration $configFile\n\n";
+} else {
+    echo "=== TESTES EM PARALELO ===\n";
+    echo "Paratest não instalado. Execute: composer require --dev brianium/paratest\n\n";
+}
+
+echo "✅ Testes concluídos!\n";
