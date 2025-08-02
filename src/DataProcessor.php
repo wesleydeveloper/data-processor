@@ -27,6 +27,11 @@ class DataProcessor
 
     protected int $errorCount = 0;
 
+    /**
+     * Linha da qual iniciar o processamento (1 = primeira linha de dados).
+     */
+    protected int $startRow = 1;
+
     public function __construct(
         FileManager $fileManager,
         ChunkProcessor $chunkProcessor
@@ -35,7 +40,14 @@ class DataProcessor
         $this->chunkProcessor = $chunkProcessor;
     }
 
-    public function import(Importable $import, string $filePath): void
+    /**
+     * Importa um arquivo a partir de um import handler.
+     *
+     * @param Importable $import    Handler que faz o map/process das linhas
+     * @param string     $filePath  Caminho local ou no disco configurado
+     * @param int        $startRow  Número da linha de dados para iniciar (1 = primeira linha de dados)
+     */
+    public function import(Importable $import, string $filePath, int $startRow = 1): void
     {
         $startTime = microtime(true);
 
@@ -55,6 +67,7 @@ class DataProcessor
             $this->totalRows = $this->fileManager->getTotalRows($localPath);
             $this->processedRows = 0;
             $this->errorCount = 0;
+            $this->startRow = max(1, $startRow);
 
             if ($import instanceof WithProgress) {
                 $import->onStart($this->totalRows);
@@ -173,6 +186,11 @@ class DataProcessor
                 }
 
                 $currentRow++;
+
+                // Pule até a linha de início definida
+                if ($currentRow < $this->startRow) {
+                    continue;
+                }
 
                 try {
                     $rowData = [];
