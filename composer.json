@@ -28,7 +28,6 @@
         "illuminate/support": "^11.0|^12.0",
         "illuminate/filesystem": "^11.0|^12.0",
         "illuminate/queue": "^11.0|^12.0",
-        "illuminate/database": "^11.0|^12.0",
         "illuminate/validation": "^11.0|^12.0",
         "openspout/openspout": "^4.30"
     },
