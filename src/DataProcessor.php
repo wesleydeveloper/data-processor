@@ -81,10 +81,6 @@ class DataProcessor
                 $this->processSmallImport($import, $localPath);
             }
 
-            if ($import instanceof WithProgress) {
-                $import->onComplete();
-            }
-
         } catch (\Throwable $e) {
             if ($import instanceof WithProgress) {
                 $import->onFailed($e);
@@ -178,7 +174,7 @@ class DataProcessor
             foreach ($sheet->getRowIterator() as $row) {
                 if ($isFirstRow) {
                     foreach ($row->getCells() as $cell) {
-                        $headers[] = Str::of($cell->getValue())->lower()->snake()->toString();
+                        $headers[] = Str::of($cell->getValue())->lower()->ascii()->snake()->toString();
                     }
 
                     $isFirstRow = false;
@@ -291,6 +287,10 @@ class DataProcessor
             } else {
                 throw $e;
             }
+        }
+
+        if((($this->processedRows + $this->errorCount) === $this->totalRows) && $import instanceof WithProgress) {
+            $import->onComplete();
         }
     }
 
