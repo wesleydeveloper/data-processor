@@ -56,9 +56,9 @@ Create an import class:
 
 namespace App\Imports;
 
-use WesleyDeveloper\DataProcessor\Contracts\Importable;
-use WesleyDeveloper\DataProcessor\Contracts\ShouldQueue;
-use WesleyDeveloper\DataProcessor\Contracts\WithChunking;
+use Wesleydeveloper\DataProcessor\Contracts\Importable;
+use Wesleydeveloper\DataProcessor\Contracts\ShouldQueue;
+use Wesleydeveloper\DataProcessor\Contracts\WithChunking;
 use Illuminate\Support\Facades\DB;
 
 class UsersImport implements Importable, ShouldQueue, WithChunking
@@ -125,7 +125,7 @@ class UsersImport implements Importable, ShouldQueue, WithChunking
 Process the import:
 
 ```php
-use WesleyDeveloper\DataProcessor\Facades\DataProcessor;
+use Wesleydeveloper\DataProcessor\Facades\DataProcessor;
 use App\Imports\UsersImport;
 
 DataProcessor::import(new UsersImport(), 'users-import.xlsx');
@@ -141,7 +141,7 @@ Create an export class:
 
 namespace App\Exports;
 
-use WesleyDeveloper\DataProcessor\Contracts\Exportable;
+use Wesleydeveloper\DataProcessor\Contracts\Exportable;
 use App\Models\User;
 use Generator;
 
@@ -181,7 +181,7 @@ class UsersExport implements Exportable
 Process the export:
 
 ```php
-use WesleyDeveloper\DataProcessor\Facades\DataProcessor;
+use Wesleydeveloper\DataProcessor\Facades\DataProcessor;
 use App\Exports\UsersExport;
 
 DataProcessor::export(new UsersExport(), 'users-export.xlsx');
